@@ -26,16 +26,25 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   {
     char c = (char)payload[i];
     msg += c;
-    //message[i] = c;
   }
   Serial.println(msg);
+  String temp = "";
 
-  int ini = msg.indexOf("\"Temperatura\"");
-  int end = msg.indexOf('}', ini);
+  if (key != "") {
+    int ini = msg.indexOf(key);
+    int end = msg.indexOf(',', ini);
+    if (end == -1) end = msg.indexOf('}', ini);
 
-  String temp = msg.substring(ini + 14, end - 1);
-  
-  temp.toCharArray(message, 400);
+
+
+    if (ini != -1 && end != -1) {
+      temp = msg.substring(ini, end);
+    }
+    else temp = "Message not found: " + key;
+  }
+  else temp = "Key not configured";
+
+  temp.toCharArray(message, 100);
 
   // ===============================================================================   COMANDOS ==================================================================
 
@@ -58,10 +67,17 @@ void reconnectMQTT()
 {
   while (!MQTT.connected())
   {
+    String temp = "Wait connection...";
+    temp.toCharArray(message, 100);
+
     Serial.print("* Tentando se conectar ao Broker MQTT: ");
     Serial.println(BROKER_MQTT);
     if (MQTT.connect(ID_MQTT, USER_MQTT_ID, MQTT_PASSWORD))
     {
+      if (TOPICO_SUBSCRIBE == "") {
+        temp = "Topic not configured";
+        temp.toCharArray(message, 100);
+      }
       Serial.println("Conectado com sucesso ao broker MQTT!");
       MQTT.subscribe(TOPICO_SUBSCRIBE);
     }
