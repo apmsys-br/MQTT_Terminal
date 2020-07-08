@@ -9,7 +9,7 @@ Em caso de desconexão (qualquer uma das duas), a conexão é refeita.
 Parâmetros: nenhum
 Retorno: nenhum
 */
-/*
+
 void VerificaConexoesWiFIEMQTT(void)
 {
 
@@ -18,4 +18,3 @@ void VerificaConexoesWiFIEMQTT(void)
         reconectWiFi(); //se não há conexão com o WiFI, a conexão é refeita
         //Timer_milles();
 }
-*/

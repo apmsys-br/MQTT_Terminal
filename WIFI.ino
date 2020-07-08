@@ -1,5 +1,3 @@
-/*
-
 //Função: inicializa e conecta-se na rede WI-FI desejada
 //Parâmetros: nenhum
 //Retorno: nenhum
@@ -35,17 +33,15 @@ Função: reconecta-se ao WiFi
 Parâmetros: nenhum
 Retorno: nenhum
 */
-/*
+
 void reconectWiFi() 
-{
-  
+{ 
     /* 
     if you are already connected to WIFI, nothing is done.
     Otherwise, connection attempts are made
     se já está conectado a rede WI-FI, nada é feito. 
     Caso contrário, são efetuadas tentativas de conexão    
     */
-    /*
     if (WiFi.status() == WL_CONNECTED)
         return;         
     WiFi.begin(SSID, PASSWORD); // Conecta na rede WI-FI
@@ -62,4 +58,3 @@ void reconectWiFi()
     Serial.println("IP obtido: ");
     Serial.println(WiFi.localIP());
 }
-*/

@@ -1,10 +1,8 @@
-/*
 void initMQTT()
 {
   MQTT.setServer(BROKER_MQTT, BROKER_PORT);   //informa qual broker e porta deve ser conectado
   MQTT.setCallback(mqtt_callback);            //atribui função de callback (função chamada quando qualquer informação de um dos tópicos subescritos chega)
 }
-*/
 
 /*
   Function: callback function this function is called every time,
@@ -17,7 +15,7 @@ void initMQTT()
   Parâmetros: nenhum
   Retorno: nenhum
 */
-/*
+
 void mqtt_callback(char* topic, byte* payload, unsigned int length)
 {
   String msg;
@@ -28,10 +26,16 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   {
     char c = (char)payload[i];
     msg += c;
-
+    //message[i] = c;
   }
-
   Serial.println(msg);
+
+  int ini = msg.indexOf("\"Temperatura\"");
+  int end = msg.indexOf('}', ini);
+
+  String temp = msg.substring(ini + 14, end - 1);
+  
+  temp.toCharArray(message, 400);
 
   // ===============================================================================   COMANDOS ==================================================================
 
@@ -50,8 +54,6 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   Retorno: nenhum
 */
 
-
-/*
 void reconnectMQTT()
 {
   while (!MQTT.connected())
@@ -71,7 +73,6 @@ void reconnectMQTT()
     }
   }
 }
-*/
 
 
 
