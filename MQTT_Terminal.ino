@@ -8,11 +8,7 @@
 #define TOPICO_SUBSCRIBE   "eMille/v1/Bet/IoTTemperatura"   //tópico MQTT de envio de informações para Broker
 #define ID_MQTT  "Snnifer"     //id mqtt (para identificação de sessão)
 
-// MQTT
-const char* BROKER_MQTT = "172.20.207.248"; //URL do broker MQTT que se deseja utilizar
-int BROKER_PORT = 1883; // Porta do Broker MQTT
-const char* USER_MQTT_ID = "emille";
-const char* MQTT_PASSWORD = "XksbMVFR3WnEexmd";
+
 */
 
 // Matrix

@@ -1,9 +1,5 @@
 /*
 
-// WIFI
-const char* SSID = "FG-Prod04"; // SSID / nome da rede WI-FI que deseja se conectar
-const char* PASSWORD = "Fiasa!Prod04##2013"; // Senha da rede WI-FI que deseja se conectar
-
 //Função: inicializa e conecta-se na rede WI-FI desejada
 //Parâmetros: nenhum
 //Retorno: nenhum
