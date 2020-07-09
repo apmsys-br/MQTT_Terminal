@@ -18,6 +18,9 @@ char message [100] = "";
 String key = "";
 String tempKey = "";
 
+// Web
+String htmlPage = "";
+
 //Variáveis e objetos globais
 ESP8266WebServer server(80);
 WiFiClient espClient; // Cria o objeto espClient
