@@ -1,7 +1,13 @@
 void initMQTT()
 {
-  MQTT.setServer(BROKER_MQTT, BROKER_PORT);   //informa qual broker e porta deve ser conectado
-  MQTT.setCallback(mqtt_callback);            //atribui função de callback (função chamada quando qualquer informação de um dos tópicos subescritos chega)
+  if (SSID != "" && PASSWORD != "" && BROKER_MQTT != "") {
+    MQTT.setServer(BROKER_MQTT, BROKER_PORT);   //informa qual broker e porta deve ser conectado
+    MQTT.setCallback(mqtt_callback);            //atribui função de callback (função chamada quando qualquer informação de um dos tópicos subescritos chega)
+  }
+  else if (BROKER_MQTT == "") {
+    String temp = "Broker not configured...";
+    temp.toCharArray(message, 100);
+  }
 }
 
 /*
@@ -72,23 +78,26 @@ void reconnectMQTT()
 
     Serial.print("* Tentando se conectar ao Broker MQTT: ");
     Serial.println(BROKER_MQTT);
-    if (MQTT.connect(ID_MQTT, USER_MQTT_ID, MQTT_PASSWORD))
-    {
-      if (TOPICO_SUBSCRIBE == "") {
-        temp = "Topic not configured";
-        temp.toCharArray(message, 100);
+    if (ID_MQTT != "" && USER_MQTT_ID != "" && MQTT_PASSWORD != "") {
+      if (MQTT.connect(ID_MQTT, USER_MQTT_ID, MQTT_PASSWORD))
+      {
+        if (TOPICO_SUBSCRIBE == "") {
+          temp = "Topic not configured";
+          temp.toCharArray(message, 100);
+        }
+        Serial.println("Conectado com sucesso ao broker MQTT!");
+        MQTT.subscribe(TOPICO_SUBSCRIBE);
       }
-      Serial.println("Conectado com sucesso ao broker MQTT!");
-      MQTT.subscribe(TOPICO_SUBSCRIBE);
+      else
+      {
+        Serial.println("Falha ao reconectar no broker.");
+        Serial.println("Havera nova tentatica de conexao em 2s");
+        delay(1000);
+      }
     }
-    else
-    {
-      Serial.println("Falha ao reconectar no broker.");
-      Serial.println("Havera nova tentatica de conexao em 2s");
-      delay(1000);
+    else {
+      String temp = "Client MQTT not configured...";
+      temp.toCharArray(message, 100);
     }
   }
 }
-
-
-

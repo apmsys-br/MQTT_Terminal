@@ -1,13 +1,22 @@
+#include <EEPROM.h>
 #include <ESP8266WiFi.h> // Importa a Biblioteca ESP8266WiFi
 #include <PubSubClient.h> // Importa a Biblioteca PubSubClient
 #include <ESP8266WebServer.h>
 #include <SPI.h>
 #include <bitBangedSPI.h>
 #include <MAX7219_Dot_Matrix.h>
-#include "credentials.h"
 
-char* TOPICO_SUBSCRIBE = "eMille/v1/Bet/IoTTemperatura";   //tópico MQTT de envio de informações para Broker
-char* ID_MQTT = "Snnifer";     //id mqtt (para identificação de sessão)
+// MQTT
+char* BROKER_MQTT = ""; //URL do broker MQTT que se deseja utilizar
+int BROKER_PORT = 1883; // Porta do Broker MQTT
+char* USER_MQTT_ID = "";
+char* MQTT_PASSWORD = "";
+char* TOPICO_SUBSCRIBE = "";   //tópico MQTT de envio de informações para Broker
+char* ID_MQTT = "";     //id mqtt (para identificação de sessão)
+
+// WIFI
+char* SSID = ""; // SSID / nome da rede WI-FI que deseja se conectar
+char* PASSWORD = ""; // Senha da rede WI-FI que deseja se conectar
 
 // Matrix
 const byte chips = 4;
@@ -28,6 +37,15 @@ PubSubClient MQTT(espClient); // Instancia o Cliente MQTT passando o objeto espC
 MAX7219_Dot_Matrix display(chips, 2);  // Chips / LOAD
 
 //Prototypes
+void getWiFiSSID();
+void getWiFiPassword();
+void getBrokerURL();
+void getBrokerPort();
+void getMqttClientID();
+void getMqttClientPassword();
+void getMqttUserID();
+void getMqttTopic();
+void setDataE2PROM(char* data, int iniAddres, int endAddress);
 void initWebServer();
 void initWiFi();
 void initMQTT();
@@ -40,6 +58,10 @@ void setup()
 {
   Serial.begin(9600);
   display.begin();
+  EEPROM.begin(20);
+  char temp[] = "FGPROD";
+  setDataE2PROM(temp, 0);
+  getWiFiSSID();
   initWebServer();
   initWiFi();
   initMQTT();
@@ -48,20 +70,10 @@ void setup()
 //programa principal
 void loop()
 {
-  VerificaConexoesWiFIEMQTT();
-  MQTT.loop();
+  if (SSID != "" && PASSWORD != "" && BROKER_MQTT != "") {
+    VerificaConexoesWiFIEMQTT();
+    MQTT.loop();
+  }
   webServerLoop();
   displayLoop();
-
-  while (Serial.available()) {
-    char c = Serial.read();
-
-    if (c != 13) {
-      tempKey += c;
-    }
-    else {
-      key = "\"" + tempKey + "\"";
-      tempKey = "";
-    }
-  }
 }
