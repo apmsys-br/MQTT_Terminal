@@ -22,6 +22,7 @@ void initWiFi()
       Serial.print(".");
     }
 
+    initMQTT();
     reconectWiFi();
   }
   else {

@@ -44,8 +44,10 @@ void handleRoot() {
 }
 
 void handleInfo() {
-  server.arg("wssid").toCharArray(SSID, 20);
-  server.arg("wpass").toCharArray(PASSWORD, 20);
+  char ssid[20] = "";
+  char pass[20] = "";
+  server.arg("wssid").toCharArray(ssid, 20);
+  server.arg("wpass").toCharArray(pass, 20);
   server.arg("burl").toCharArray(BROKER_MQTT, 50);
   char aux[5] = "";
   server.arg("bport").toCharArray(aux, 5);
@@ -55,8 +57,8 @@ void handleInfo() {
   server.arg("topic").toCharArray(TOPICO_SUBSCRIBE, 100);
   key = "\"" + server.arg("key") + "\"";
   
-  //Serial.println(SSID);
-  //Serial.println(PASSWORD);
+  Serial.println(ssid);
+  Serial.println(pass);
   //Serial.println(BROKER_MQTT);
   //Serial.println(BROKER_PORT);
   //Serial.println(USER_MQTT_ID);
@@ -77,6 +79,12 @@ void handleInfo() {
   htmlPage += "</html>";
 
   server.send(200, "text/html", htmlPage);
+
+  EEPROM.begin(512);
+  EEPROM.put(0, ssid);
+  EEPROM.put(20, pass);
+  EEPROM.commit();
+  delay(1000);
 }
 
 void initWebServer() {

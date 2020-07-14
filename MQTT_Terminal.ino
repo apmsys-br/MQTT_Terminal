@@ -30,6 +30,8 @@ String tempKey = "";
 // Web
 String htmlPage = "";
 
+char tempData[512] = ""
+
 //Variáveis e objetos globais
 ESP8266WebServer server(80);
 WiFiClient espClient; // Cria o objeto espClient
@@ -58,13 +60,11 @@ void setup()
 {
   Serial.begin(9600);
   display.begin();
-  EEPROM.begin(20);
-  char temp[] = "FGPROD";
-  setDataE2PROM(temp, 0);
   getWiFiSSID();
+  Serial.println(SSID);
+  //getWiFiPassword();
   initWebServer();
   initWiFi();
-  initMQTT();
 }
 
 //programa principal
