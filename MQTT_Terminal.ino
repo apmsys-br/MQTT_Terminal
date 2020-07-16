@@ -7,7 +7,7 @@
 #include <MAX7219_Dot_Matrix.h>
 
 // MQTT
-char* BROKER_MQTT = ""; //URL do broker MQTT que se deseja utilizar
+char BROKER_MQTT[15] = ""; //URL do broker MQTT que se deseja utilizar
 int BROKER_PORT = 1883; // Porta do Broker MQTT
 char* USER_MQTT_ID = "";
 char* MQTT_PASSWORD = "";
@@ -15,8 +15,8 @@ char* TOPICO_SUBSCRIBE = "";   //tópico MQTT de envio de informações para Bro
 char* ID_MQTT = "";     //id mqtt (para identificação de sessão)
 
 // WIFI
-char* SSID = ""; // SSID / nome da rede WI-FI que deseja se conectar
-char* PASSWORD = ""; // Senha da rede WI-FI que deseja se conectar
+char SSID[20] = ""; // SSID / nome da rede WI-FI que deseja se conectar
+char PASSWORD[20] = ""; // Senha da rede WI-FI que deseja se conectar
 
 // Matrix
 const byte chips = 4;
@@ -29,8 +29,6 @@ String tempKey = "";
 
 // Web
 String htmlPage = "";
-
-char tempData[512] = ""
 
 //Variáveis e objetos globais
 ESP8266WebServer server(80);
@@ -60,9 +58,17 @@ void setup()
 {
   Serial.begin(9600);
   display.begin();
+  EEPROM.begin(512);
   getWiFiSSID();
+  getWiFiPassword();
+  getBrokerURL();
+  EEPROM.end();
+  Serial.print("Externa SSID: ");
   Serial.println(SSID);
-  //getWiFiPassword();
+  Serial.print("Externa PASS: ");
+  Serial.println(PASSWORD);
+  Serial.print("Externa Broker: ");
+  Serial.println(BROKER_MQTT);
   initWebServer();
   initWiFi();
 }
@@ -70,7 +76,7 @@ void setup()
 //programa principal
 void loop()
 {
-  if (SSID != "" && PASSWORD != "" && BROKER_MQTT != "") {
+  if (SSID[0] != ' ' && PASSWORD[0] != ' ' && BROKER_MQTT[0] != ' ') {
     VerificaConexoesWiFIEMQTT();
     MQTT.loop();
   }

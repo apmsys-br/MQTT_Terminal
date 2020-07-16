@@ -1,35 +1,52 @@
 void getWiFiSSID() {
-  int i;
-  int j;
-  String merda= "";
-  EEPROM.begin(512);
-  if ((byte)EEPROM.read(0) != 0xFF) {
-    for (i = 0, j = 0; j <= 19; i++, j++) {
-      byte b = (byte)EEPROM.read(j);
-      merda += (char)b;
-      //if(b == 0x00) break;
-      //Serial.print((byte)EEPROM.read(j));
-      //SSID[i] = (char)EEPROM.read(j);
-    }
+  int i = 0;
+  String aux = " ";
 
-    merda.toCharArray(SSID, 20);
+  if ((byte)EEPROM.read(0) != 0xFF) {
+    aux = "";
+    for (i = 0; i <= 19; i++) {
+      byte b = (byte)EEPROM.read(i);
+      aux += (char)b;
+      if (b == 0x00) break;
+    }
+    Serial.print("Interna SSID: ");
+    Serial.println(aux);
   }
-  EEPROM.end();
+  aux.toCharArray(SSID, 20);
 }
 
 void getWiFiPassword() {
-  int i;
-  int j;
-  EEPROM.begin(512);
+  int i = 0;
+  String aux = " ";
+
   if ((byte)EEPROM.read(20) != 0xFF) {
-    for (i = 0, j = 20; j <= 39; i++, j++) PASSWORD[i] = (char)EEPROM.read(j);
+    aux = "";
+    for (i = 20; i <= 39; i++) {
+      byte b = (byte)EEPROM.read(i);
+      aux += (char)b;
+      if (b == 0x00) break;
+    }
+    Serial.print("Interna PASS: ");
+    Serial.println(aux);
   }
-  EEPROM.end();
-  Serial.println(PASSWORD);
+  aux.toCharArray(PASSWORD, 20);
 }
 
 void getBrokerURL() {
+  int i = 0;
+  String aux = " ";
 
+  if ((byte)EEPROM.read(40) != 0xFF) {
+    aux = "";
+    for (i = 40; i <= 54; i++) {
+      byte b = (byte)EEPROM.read(i);
+      aux += (char)b;
+      if (b == 0x00) break;
+    }
+    Serial.print("Interna Broker: ");
+    Serial.println(aux);
+  }
+  aux.toCharArray(BROKER_MQTT, 15);
 }
 
 void getBrokerPort() {

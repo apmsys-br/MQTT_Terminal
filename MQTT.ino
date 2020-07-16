@@ -71,14 +71,14 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
 
 void reconnectMQTT()
 {
-  while (!MQTT.connected())
-  {
-    String temp = "Wait connection...";
-    temp.toCharArray(message, 100);
+  if (ID_MQTT != "" && USER_MQTT_ID != "" && MQTT_PASSWORD != "") {
+    while (!MQTT.connected())
+    {
+      String temp = "Wait connection...";
+      temp.toCharArray(message, 100);
 
-    Serial.print("* Tentando se conectar ao Broker MQTT: ");
-    Serial.println(BROKER_MQTT);
-    if (ID_MQTT != "" && USER_MQTT_ID != "" && MQTT_PASSWORD != "") {
+      Serial.print("* Tentando se conectar ao Broker MQTT: ");
+      Serial.println(BROKER_MQTT);
       if (MQTT.connect(ID_MQTT, USER_MQTT_ID, MQTT_PASSWORD))
       {
         if (TOPICO_SUBSCRIBE == "") {
@@ -95,9 +95,9 @@ void reconnectMQTT()
         delay(1000);
       }
     }
-    else {
-      String temp = "Client MQTT not configured...";
-      temp.toCharArray(message, 100);
-    }
+  }
+  else {
+    String temp = "Client MQTT not configured...";
+    temp.toCharArray(message, 100);
   }
 }

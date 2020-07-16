@@ -4,12 +4,14 @@
 
 void initWiFi()
 {
-  if (SSID != "" && PASSWORD != "") {
+  if (SSID[0] != ' ' && PASSWORD[0] != ' ') {
     delay(10);
     Serial.println("------Conexao WI-FI------");
     Serial.print("Conectando-se na rede: ");
     Serial.println(SSID);
     Serial.println("Aguarde");
+    String temp = "Wait connection...";
+    temp.toCharArray(message, 100);
 
 
     if (WiFi.status() == WL_CONNECTED)
@@ -20,6 +22,8 @@ void initWiFi()
     {
       delay(100);
       Serial.print(".");
+      webServerLoop();
+      displayLoop();
     }
 
     initMQTT();
@@ -51,12 +55,17 @@ void reconectWiFi()
   */
   if (WiFi.status() == WL_CONNECTED)
     return;
+
+  String temp = "Wait connection...";
+  temp.toCharArray(message, 100);
   WiFi.begin(SSID, PASSWORD); // Conecta na rede WI-FI
 
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(100);
-    //Serial.print(".");
+    Serial.print(".");
+    webServerLoop();
+    displayLoop();
   }
 
   Serial.println();
