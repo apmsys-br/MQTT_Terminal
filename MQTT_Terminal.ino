@@ -6,17 +6,25 @@
 #include <bitBangedSPI.h>
 #include <MAX7219_Dot_Matrix.h>
 
+#define WIFI_SSID_LENGTH 20
+#define WIFI_PASSWORD_LENGTH 20
+#define BROKER_URL_LENGTH 15
+#define MQTT_USERID_LENGTH 20
+#define MQTT_PASSWORD_LENGTH 20
+#define MQTT_USERNAME_LENGTH 20
+#define MQTT_TOPIC_SUBCRIBE_LENGTH 50
+
 // MQTT
-char BROKER_MQTT[15] = ""; //URL do broker MQTT que se deseja utilizar
+char BROKER_MQTT[BROKER_URL_LENGTH] = ""; //URL do broker MQTT que se deseja utilizar
 int BROKER_PORT = 1883; // Porta do Broker MQTT
-char* USER_MQTT_ID = "";
-char* MQTT_PASSWORD = "";
-char* TOPICO_SUBSCRIBE = "";   //tópico MQTT de envio de informações para Broker
-char* ID_MQTT = "";     //id mqtt (para identificação de sessão)
+char USER_MQTT_ID[MQTT_USERID_LENGTH] = "";
+char MQTT_PASSWORD[MQTT_PASSWORD_LENGTH] = "";
+char TOPICO_SUBSCRIBE[MQTT_TOPIC_SUBCRIBE_LENGTH] = "";   //tópico MQTT de envio de informações para Broker
+char ID_MQTT[MQTT_USERNAME_LENGTH] = "";     //id mqtt (para identificação de sessão)
 
 // WIFI
-char SSID[20] = ""; // SSID / nome da rede WI-FI que deseja se conectar
-char PASSWORD[20] = ""; // Senha da rede WI-FI que deseja se conectar
+char SSID[WIFI_SSID_LENGTH] = ""; // SSID / nome da rede WI-FI que deseja se conectar
+char PASSWORD[WIFI_PASSWORD_LENGTH] = ""; // Senha da rede WI-FI que deseja se conectar
 
 // Matrix
 const byte chips = 4;

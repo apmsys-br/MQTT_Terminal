@@ -27,12 +27,13 @@ void handleRoot() {
   htmlPage += "<div class=\"info\">";
   htmlPage += "<input type=\"text\" name=\"wssid\" placeholder=\"WiFi SSID\" value=\"" + String(SSID) + "\">WiFi SSID</input>";
   htmlPage += "<input type=\"text\" name=\"wpass\" placeholder=\"WiFi password\" value=\"" + String(PASSWORD) + "\">WiFi password</input>";
-  htmlPage += "<input type=\"text\" name=\"burl\" placeholder=\"Broker url\">";
-  htmlPage += "<input type=\"text\" name=\"bport\" placeholder=\"Broker port\">";
-  htmlPage += "<input type=\"text\" name=\"usrid\" placeholder=\"MQTT UserID\">";
-  htmlPage += "<input type=\"text\" name=\"mpass\" placeholder=\"MQTT password\">";
-  htmlPage += "<input type=\"text\" name=\"topic\" placeholder=\"Topic subscribe\" value=\"eMille/v1/Bet/IoTTemperatura\">";
-  htmlPage += "<input type=\"text\" name=\"key\" placeholder=\"Key target\">";
+  htmlPage += "<input type=\"text\" name=\"burl\" placeholder=\"Broker url\" value=\"" + String(BROKER_MQTT) + "\">Broker url</input>";
+  htmlPage += "<input type=\"text\" name=\"bport\" placeholder=\"Broker port\" value=\"" + String(BROKER_PORT) + "\">Broker port</input>";
+  htmlPage += "<input type=\"text\" name=\"usrid\" placeholder=\"MQTT UserID\" value=\"" + String(USER_MQTT_ID) + "\">MQTT UserID</input>";
+  htmlPage += "<input type=\"text\" name=\"mpass\" placeholder=\"MQTT password\" value=\"" + String(MQTT_PASSWORD) + "\">MQTT password</input>";
+  htmlPage += "<input type=\"text\" name=\"mname\" placeholder=\"MQTT UserName\" value=\"" + String(ID_MQTT) + "\">MQTT UserName</input>";
+  htmlPage += "<input type=\"text\" name=\"topic\" placeholder=\"Topic subscribe\" value=\"" + String(TOPICO_SUBSCRIBE) + "\">Topic subscribe</input>";;
+  htmlPage += "<input type=\"text\" name=\"key\" placeholder=\"Key target\" value=\"" + key + "\">Key target</input>";
   htmlPage += "</div>";
   htmlPage += "<button href=\"/info\" class=\"button\">Submit</button>";
   htmlPage += "</form>";
@@ -44,17 +45,23 @@ void handleRoot() {
 }
 
 void handleInfo() {
-  char ssid[20] = "";
-  char pass[20] = "";
-  char broker[15] = "";
-  char port[4] = "";
-  server.arg("wssid").toCharArray(ssid, 20);
-  server.arg("wpass").toCharArray(pass, 20);
-  server.arg("burl").toCharArray(broker, 15);
-  server.arg("bport").toCharArray(port, 4);
-  server.arg("usrid").toCharArray(USER_MQTT_ID, 50);
-  server.arg("mpass").toCharArray(MQTT_PASSWORD, 20);
-  server.arg("topic").toCharArray(TOPICO_SUBSCRIBE, 100);
+  char ssid[WIFI_SSID_LENGTH] = "";
+  char pass[WIFI_PASSWORD_LENGTH] = "";
+  char broker[BROKER_URL_LENGTH] = "";
+  char port[5] = "";
+  char mqttID[MQTT_USERID_LENGTH] = "";
+  char mqttPass[MQTT_PASSWORD_LENGTH] = "";
+  char topicSub[MQTT_TOPIC_SUBCRIBE_LENGTH] = "";
+  char mqttName[MQTT_USERNAME_LENGTH] = "";
+
+  server.arg("wssid").toCharArray(ssid, WIFI_SSID_LENGTH);
+  server.arg("wpass").toCharArray(pass, WIFI_PASSWORD_LENGTH);
+  server.arg("burl").toCharArray(broker, BROKER_URL_LENGTH);
+  server.arg("bport").toCharArray(port, 5);
+  server.arg("usrid").toCharArray(USER_MQTT_ID, MQTT_USERID_LENGTH);
+  server.arg("mpass").toCharArray(MQTT_PASSWORD, MQTT_PASSWORD_LENGTH);
+  server.arg("mname").toCharArray(MQTT_PASSWORD, MQTT_USERNAME_LENGTH);
+  server.arg("topic").toCharArray(TOPICO_SUBSCRIBE, MQTT_TOPIC_SUBCRIBE_LENGTH);
   key = "\"" + server.arg("key") + "\"";
 
   Serial.println(ssid);
@@ -80,11 +87,24 @@ void handleInfo() {
 
   server.send(200, "text/html", htmlPage);
 
+  int offset = 0;
+
   EEPROM.begin(512);
-  EEPROM.put(0, ssid);
-  EEPROM.put(20, pass);
-  EEPROM.put(40, broker);
-  EEPROM.put(55, port);
+  EEPROM.put(offset, ssid);
+  offset += WIFI_SSID_LENGTH;
+  EEPROM.put(offset, pass);
+  offset += WIFI_PASSWORD_LENGTH;
+  EEPROM.put(offset, broker);
+  offset += BROKER_URL_LENGTH;
+  EEPROM.put(offset, port);
+  offset += 5;
+  EEPROM.put(offset, mqttID);
+  offset += MQTT_USERID_LENGTH;
+  EEPROM.put(offset, mqttPass);
+  offset += MQTT_PASSWORD_LENGTH;
+  EEPROM.put(offset, mqttName);
+  offset += MQTT_USERNAME_LENGTH;
+  EEPROM.put(offset, topicSub);
   EEPROM.commit();
   delay(1000);
 
@@ -105,4 +125,3 @@ void initWebServer() {
 void webServerLoop() {
   server.handleClient();
 }
-
