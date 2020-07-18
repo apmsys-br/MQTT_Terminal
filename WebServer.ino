@@ -33,7 +33,7 @@ void handleRoot() {
   htmlPage += "<input type=\"text\" name=\"mpass\" placeholder=\"MQTT password\" value=\"" + String(MQTT_PASSWORD) + "\">MQTT password</input>";
   htmlPage += "<input type=\"text\" name=\"mname\" placeholder=\"MQTT UserName\" value=\"" + String(ID_MQTT) + "\">MQTT UserName</input>";
   htmlPage += "<input type=\"text\" name=\"topic\" placeholder=\"Topic subscribe\" value=\"" + String(TOPICO_SUBSCRIBE) + "\">Topic subscribe</input>";;
-  htmlPage += "<input type=\"text\" name=\"key\" placeholder=\"Key target\" value=\"" + key + "\">Key target</input>";
+  htmlPage += "<input type=\"text\" name=\"key\" placeholder=\"Key target\" value=\"" + String(keyTopic) + "\">Key target</input>";
   htmlPage += "</div>";
   htmlPage += "<button href=\"/info\" class=\"button\">Submit</button>";
   htmlPage += "</form>";
@@ -53,25 +53,27 @@ void handleInfo() {
   char mqttPass[MQTT_PASSWORD_LENGTH] = "";
   char topicSub[MQTT_TOPIC_SUBCRIBE_LENGTH] = "";
   char mqttName[MQTT_USERNAME_LENGTH] = "";
+  char topicKey[MQTT_TOPIC_KEYWORD_LENGTH] = "";
 
   server.arg("wssid").toCharArray(ssid, WIFI_SSID_LENGTH);
   server.arg("wpass").toCharArray(pass, WIFI_PASSWORD_LENGTH);
   server.arg("burl").toCharArray(broker, BROKER_URL_LENGTH);
   server.arg("bport").toCharArray(port, 5);
-  server.arg("usrid").toCharArray(USER_MQTT_ID, MQTT_USERID_LENGTH);
-  server.arg("mpass").toCharArray(MQTT_PASSWORD, MQTT_PASSWORD_LENGTH);
-  server.arg("mname").toCharArray(MQTT_PASSWORD, MQTT_USERNAME_LENGTH);
-  server.arg("topic").toCharArray(TOPICO_SUBSCRIBE, MQTT_TOPIC_SUBCRIBE_LENGTH);
-  key = "\"" + server.arg("key") + "\"";
+  server.arg("usrid").toCharArray(mqttID, MQTT_USERID_LENGTH);
+  server.arg("mpass").toCharArray(mqttPass, MQTT_PASSWORD_LENGTH);
+  server.arg("mname").toCharArray(mqttName, MQTT_USERNAME_LENGTH);
+  server.arg("topic").toCharArray(topicSub, MQTT_TOPIC_SUBCRIBE_LENGTH);
+  server.arg("key").toCharArray(topicKey, MQTT_TOPIC_KEYWORD_LENGTH);
 
   Serial.println(ssid);
   Serial.println(pass);
   Serial.println(broker);
   Serial.println(port);
-  //Serial.println(USER_MQTT_ID);
-  //println(MQTT_PASSWORD);
-  //Serial.println(TOPICO_SUBSCRIBE);
-  //Serial.println(key);
+  Serial.println(mqttID);
+  Serial.println(mqttPass);
+  Serial.println(topicSub);
+  Serial.println(mqttName);
+  Serial.println(topicKey);
 
   htmlPage = "<html>";
   htmlPage += "<head>";
@@ -89,7 +91,7 @@ void handleInfo() {
 
   int offset = 0;
 
-  EEPROM.begin(512);
+  EEPROM.begin(256);
   EEPROM.put(offset, ssid);
   offset += WIFI_SSID_LENGTH;
   EEPROM.put(offset, pass);
@@ -105,8 +107,13 @@ void handleInfo() {
   EEPROM.put(offset, mqttName);
   offset += MQTT_USERNAME_LENGTH;
   EEPROM.put(offset, topicSub);
+  offset += MQTT_TOPIC_SUBCRIBE_LENGTH;
+  EEPROM.put(offset, topicKey);
   EEPROM.commit();
   delay(1000);
+
+  int w;
+  for (w = 0; w < 256; w++) Serial.print((char)EEPROM.read(w));
 
   String temp = "Reset device!";
   temp.toCharArray(message, 100);

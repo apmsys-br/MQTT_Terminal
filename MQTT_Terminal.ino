@@ -13,6 +13,7 @@
 #define MQTT_PASSWORD_LENGTH 20
 #define MQTT_USERNAME_LENGTH 20
 #define MQTT_TOPIC_SUBCRIBE_LENGTH 50
+#define MQTT_TOPIC_KEYWORD_LENGTH 20
 
 // MQTT
 char BROKER_MQTT[BROKER_URL_LENGTH] = ""; //URL do broker MQTT que se deseja utilizar
@@ -21,6 +22,7 @@ char USER_MQTT_ID[MQTT_USERID_LENGTH] = "";
 char MQTT_PASSWORD[MQTT_PASSWORD_LENGTH] = "";
 char TOPICO_SUBSCRIBE[MQTT_TOPIC_SUBCRIBE_LENGTH] = "";   //tópico MQTT de envio de informações para Broker
 char ID_MQTT[MQTT_USERNAME_LENGTH] = "";     //id mqtt (para identificação de sessão)
+char keyTopic[MQTT_TOPIC_KEYWORD_LENGTH] = "";
 
 // WIFI
 char SSID[WIFI_SSID_LENGTH] = ""; // SSID / nome da rede WI-FI que deseja se conectar
@@ -33,7 +35,6 @@ unsigned long MOVE_INTERVAL = 50;  // mS
 int  messageOffset;
 char message [100] = "";
 String key = "";
-String tempKey = "";
 
 // Web
 String htmlPage = "";
@@ -51,9 +52,9 @@ void getBrokerURL();
 void getBrokerPort();
 void getMqttClientID();
 void getMqttClientPassword();
-void getMqttUserID();
+void getMqttUserName();
 void getMqttTopic();
-void setDataE2PROM(char* data, int iniAddres, int endAddress);
+void getKeyTopic();
 void initWebServer();
 void initWiFi();
 void initMQTT();
@@ -66,17 +67,17 @@ void setup()
 {
   Serial.begin(9600);
   display.begin();
-  EEPROM.begin(512);
+  EEPROM.begin(256);
   getWiFiSSID();
   getWiFiPassword();
   getBrokerURL();
+  getBrokerPort();
+  getMqttClientID();
+  getMqttClientPassword();
+  getMqttUserName();
+  getMqttTopic();
+  getKeyTopic();
   EEPROM.end();
-  Serial.print("Externa SSID: ");
-  Serial.println(SSID);
-  Serial.print("Externa PASS: ");
-  Serial.println(PASSWORD);
-  Serial.print("Externa Broker: ");
-  Serial.println(BROKER_MQTT);
   initWebServer();
   initWiFi();
 }

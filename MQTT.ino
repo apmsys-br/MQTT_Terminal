@@ -92,7 +92,9 @@ void reconnectMQTT()
       {
         Serial.println("Falha ao reconectar no broker.");
         Serial.println("Havera nova tentatica de conexao em 2s");
-        delay(1000);
+        webServerLoop();
+        displayLoop();
+        delay(100);
       }
     }
   }
