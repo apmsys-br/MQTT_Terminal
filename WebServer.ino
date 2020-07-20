@@ -31,7 +31,7 @@ void handleRoot() {
   htmlPage += "<input type=\"text\" name=\"bport\" placeholder=\"Broker port\" value=\"" + String(BROKER_PORT) + "\">Broker port</input>";
   htmlPage += "<input type=\"text\" name=\"usrid\" placeholder=\"MQTT UserID\" value=\"" + String(USER_MQTT_ID) + "\">MQTT UserID</input>";
   htmlPage += "<input type=\"text\" name=\"mpass\" placeholder=\"MQTT password\" value=\"" + String(MQTT_PASSWORD) + "\">MQTT password</input>";
-  htmlPage += "<input type=\"text\" name=\"mname\" placeholder=\"MQTT UserName\" value=\"" + String(ID_MQTT) + "\">MQTT UserName</input>";
+  htmlPage += "<input type=\"text\" name=\"devtar\" placeholder=\"MQTT Device target\" value=\"" + String(deviceTarget) + "\">MQTT Device target</input>";
   htmlPage += "<input type=\"text\" name=\"topic\" placeholder=\"Topic subscribe\" value=\"" + String(TOPICO_SUBSCRIBE) + "\">Topic subscribe</input>";;
   htmlPage += "<input type=\"text\" name=\"key\" placeholder=\"Key target\" value=\"" + String(keyTopic) + "\">Key target</input>";
   htmlPage += "</div>";
@@ -52,7 +52,7 @@ void handleInfo() {
   char mqttID[MQTT_USERID_LENGTH] = "";
   char mqttPass[MQTT_PASSWORD_LENGTH] = "";
   char topicSub[MQTT_TOPIC_SUBCRIBE_LENGTH] = "";
-  char mqttName[MQTT_USERNAME_LENGTH] = "";
+  char targetDev[MQTT_DEVTARGET_LENGTH] = "";
   char topicKey[MQTT_TOPIC_KEYWORD_LENGTH] = "";
 
   server.arg("wssid").toCharArray(ssid, WIFI_SSID_LENGTH);
@@ -61,7 +61,7 @@ void handleInfo() {
   server.arg("bport").toCharArray(port, 5);
   server.arg("usrid").toCharArray(mqttID, MQTT_USERID_LENGTH);
   server.arg("mpass").toCharArray(mqttPass, MQTT_PASSWORD_LENGTH);
-  server.arg("mname").toCharArray(mqttName, MQTT_USERNAME_LENGTH);
+  server.arg("devtar").toCharArray(targetDev, MQTT_DEVTARGET_LENGTH);
   server.arg("topic").toCharArray(topicSub, MQTT_TOPIC_SUBCRIBE_LENGTH);
   server.arg("key").toCharArray(topicKey, MQTT_TOPIC_KEYWORD_LENGTH);
 
@@ -72,7 +72,7 @@ void handleInfo() {
   Serial.println(mqttID);
   Serial.println(mqttPass);
   Serial.println(topicSub);
-  Serial.println(mqttName);
+  Serial.println(targetDev);
   Serial.println(topicKey);
 
   htmlPage = "<html>";
@@ -104,8 +104,8 @@ void handleInfo() {
   offset += MQTT_USERID_LENGTH;
   EEPROM.put(offset, mqttPass);
   offset += MQTT_PASSWORD_LENGTH;
-  EEPROM.put(offset, mqttName);
-  offset += MQTT_USERNAME_LENGTH;
+  EEPROM.put(offset, targetDev);
+  offset += MQTT_DEVTARGET_LENGTH;
   EEPROM.put(offset, topicSub);
   offset += MQTT_TOPIC_SUBCRIBE_LENGTH;
   EEPROM.put(offset, topicKey);

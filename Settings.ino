@@ -104,24 +104,36 @@ void getMqttClientPassword() {
 }
 
 void getMqttUserName() {
+  String aux = "ESP_";
+  aux += WiFi.macAddress().substring(9, 11);
+  aux += WiFi.macAddress().substring(12, 14);
+  aux += WiFi.macAddress().substring(15, 17);
+  aux.toCharArray(ID_MQTT, 11);
+  //Serial.println(ID_MQTT);
+}
+
+void getDeviceTarget() {
   int i = 0;
   int offset = WIFI_SSID_LENGTH + WIFI_PASSWORD_LENGTH + BROKER_URL_LENGTH + 5 + MQTT_USERID_LENGTH + MQTT_PASSWORD_LENGTH;
   String aux = " ";
 
   if ((byte)EEPROM.read(offset) != 0xFF) {
     aux = "";
-    for (i = offset; i < offset + MQTT_USERNAME_LENGTH; i++) {
+    for (i = offset; i < offset + MQTT_DEVTARGET_LENGTH; i++) {
       byte b = (byte)EEPROM.read(i);
       aux += (char)b;
       if (b == 0x00) break;
     }
   }
-  aux.toCharArray(ID_MQTT, MQTT_USERNAME_LENGTH);
+  aux.toCharArray(deviceTarget, MQTT_DEVTARGET_LENGTH);
+
+  int j;
+  for (j = 0; j < i; j++) dev += deviceTarget[j];
 }
 
 void getMqttTopic() {
   int i = 0;
-  int offset = WIFI_SSID_LENGTH + WIFI_PASSWORD_LENGTH + BROKER_URL_LENGTH + 5 + MQTT_USERID_LENGTH + MQTT_PASSWORD_LENGTH + MQTT_USERNAME_LENGTH;
+  int offset = WIFI_SSID_LENGTH + WIFI_PASSWORD_LENGTH + BROKER_URL_LENGTH + 5 + MQTT_USERID_LENGTH + MQTT_PASSWORD_LENGTH + MQTT_DEVTARGET_LENGTH;
   String aux = " ";
 
   if ((byte)EEPROM.read(offset) != 0xFF) {
@@ -137,7 +149,7 @@ void getMqttTopic() {
 
 void getKeyTopic() {
   int i = 0;
-  int offset = WIFI_SSID_LENGTH + WIFI_PASSWORD_LENGTH + BROKER_URL_LENGTH + 5 + MQTT_USERID_LENGTH + MQTT_PASSWORD_LENGTH + MQTT_USERNAME_LENGTH + MQTT_TOPIC_SUBCRIBE_LENGTH;
+  int offset = WIFI_SSID_LENGTH + WIFI_PASSWORD_LENGTH + BROKER_URL_LENGTH + 5 + MQTT_USERID_LENGTH + MQTT_PASSWORD_LENGTH + MQTT_DEVTARGET_LENGTH + MQTT_TOPIC_SUBCRIBE_LENGTH;
   String aux = " ";
 
   if ((byte)EEPROM.read(offset) != 0xFF) {

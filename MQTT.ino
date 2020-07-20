@@ -36,19 +36,21 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   Serial.println(msg);
   String temp = "";
 
-  if (key != "") {
-    int ini = msg.indexOf(key);
-    int end = msg.indexOf(',', ini);
-    if (end == -1) end = msg.indexOf('}', ini);
+  if (dev != "") {
+    if (msg.indexOf(dev) != -1) {
+      if (key != "") {
+        int ini = msg.indexOf(key);
+        int end = msg.indexOf(',', ini);
+        if (end == -1) end = msg.indexOf('}', ini);
 
-
-
-    if (ini != -1 && end != -1) {
-      temp = msg.substring(ini, end);
-    }
-    else temp = "Message not found: " + key;
-  }
-  else temp = "Key not configured";
+        if (ini != -1 && end != -1) {
+          temp = msg.substring(ini, end);
+        }
+        else temp = "Message not found: " + key;
+      }
+      else temp = "Key not configured";
+    } else temp = "Device target not found";
+  } else temp = "Device target not configured";
 
   temp.toCharArray(message, 100);
 

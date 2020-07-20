@@ -11,7 +11,7 @@
 #define BROKER_URL_LENGTH 15
 #define MQTT_USERID_LENGTH 20
 #define MQTT_PASSWORD_LENGTH 20
-#define MQTT_USERNAME_LENGTH 20
+#define MQTT_DEVTARGET_LENGTH 20
 #define MQTT_TOPIC_SUBCRIBE_LENGTH 50
 #define MQTT_TOPIC_KEYWORD_LENGTH 20
 
@@ -21,7 +21,8 @@ int BROKER_PORT = 1883; // Porta do Broker MQTT
 char USER_MQTT_ID[MQTT_USERID_LENGTH] = "";
 char MQTT_PASSWORD[MQTT_PASSWORD_LENGTH] = "";
 char TOPICO_SUBSCRIBE[MQTT_TOPIC_SUBCRIBE_LENGTH] = "";   //tópico MQTT de envio de informações para Broker
-char ID_MQTT[MQTT_USERNAME_LENGTH] = "";     //id mqtt (para identificação de sessão)
+char ID_MQTT[12] = "";     //id mqtt (para identificação de sessão)
+char deviceTarget[MQTT_DEVTARGET_LENGTH] = "";
 char keyTopic[MQTT_TOPIC_KEYWORD_LENGTH] = "";
 
 // WIFI
@@ -35,6 +36,7 @@ unsigned long MOVE_INTERVAL = 50;  // mS
 int  messageOffset;
 char message [100] = "";
 String key = "";
+String dev = "";
 
 // Web
 String htmlPage = "";
@@ -53,6 +55,7 @@ void getBrokerPort();
 void getMqttClientID();
 void getMqttClientPassword();
 void getMqttUserName();
+void getDeviceTarget();
 void getMqttTopic();
 void getKeyTopic();
 void initWebServer();
@@ -74,10 +77,11 @@ void setup()
   getBrokerPort();
   getMqttClientID();
   getMqttClientPassword();
-  getMqttUserName();
+  getDeviceTarget();
   getMqttTopic();
   getKeyTopic();
   EEPROM.end();
+  getMqttUserName();
   initWebServer();
   initWiFi();
 }
